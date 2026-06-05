@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="80%">
+      <stop offset="0%" stop-color="#2a8cf0"/>
+      <stop offset="100%" stop-color="#005bbb"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Full-bleed background (platform applies its own rounded mask) -->
+  <rect x="0" y="0" width="512" height="512" fill="url(#bg)"/>
+
+  <!-- Barcode scan-frame corner brackets -->
+  <g fill="none" stroke="#E53935" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M84 136 V84 H136"/>
+    <path d="M376 84 H428 V136"/>
+    <path d="M84 376 V428 H136"/>
+    <path d="M376 428 H428 V376"/>
+  </g>
+
+  <!-- Location map pin -->
+  <path d="M256 110 C330 110 390 170 390 244 C390 320 330 365 256 438 C182 365 122 320 122 244 C122 170 182 110 256 110 Z"
+        fill="#FFFFFF" stroke="#0B2545" stroke-width="9"/>
+
+  <!-- Letter H -->
+  <rect x="170" y="150" width="36" height="150" fill="#0B4AA6"/>
+  <rect x="296" y="150" width="36" height="150" fill="#0B4AA6"/>
+  <rect x="170" y="208" width="162" height="30" fill="#0B4AA6"/>
+
+  <!-- Letter C -->
+  <path d="M322 178 A86 86 0 1 0 322 322" fill="none" stroke="#F5C400" stroke-width="32" stroke-linecap="round"/>
+
+  <!-- Crosshair accent -->
+  <circle cx="256" cy="225" r="9" fill="none" stroke="#E53935" stroke-width="6"/>
+  <line x1="256" y1="198" x2="256" y2="252" stroke="#E53935" stroke-width="6" stroke-linecap="round"/>
+  <line x1="229" y1="225" x2="283" y2="225" stroke="#E53935" stroke-width="6" stroke-linecap="round"/>
+</svg>

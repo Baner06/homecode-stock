@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Generar apple-touch-icon.png — HomeCode Stock</title>
+<style>
+  body{font-family:system-ui,Arial,sans-serif;background:#f4f6f9;color:#222;margin:0;padding:32px;display:flex;flex-direction:column;align-items:center;gap:20px}
+  h1{font-size:20px;text-align:center}
+  p{max-width:560px;text-align:center;line-height:1.5}
+  canvas{border-radius:24px;box-shadow:0 8px 30px rgba(0,0,0,.15)}
+  .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+  a.btn,button.btn{background:#0071DC;color:#fff;border:none;border-radius:10px;padding:12px 18px;font-size:15px;font-weight:600;text-decoration:none;cursor:pointer}
+  small{color:#667}
+</style>
+</head>
+<body>
+  <h1>Generador de íconos — HomeCode Stock</h1>
+  <p>Pulsa los botones para descargar los PNG cuadrados. Luego colócalos en la carpeta <code>www</code> (y <code>www/icons</code>) antes de subir a GitHub.</p>
+  <canvas id="c" width="512" height="512"></canvas>
+  <div class="row">
+    <button class="btn" id="dl-apple">Descargar apple-touch-icon.png (512×512)</button>
+    <button class="btn" id="dl-192">Descargar icon-192.png</button>
+    <button class="btn" id="dl-512">Descargar icon-512.png</button>
+  </div>
+  <small>Si la imagen no aparece, recarga la página.</small>
+
+<script>
+const SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="80%">
+      <stop offset="0%" stop-color="#2a8cf0"/>
+      <stop offset="100%" stop-color="#005bbb"/>
+    </radialGradient>
+  </defs>
+  <rect x="0" y="0" width="512" height="512" fill="url(#bg)"/>
+  <g fill="none" stroke="#E53935" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M84 136 V84 H136"/>
+    <path d="M376 84 H428 V136"/>
+    <path d="M84 376 V428 H136"/>
+    <path d="M376 428 H428 V376"/>
+  </g>
+  <path d="M256 110 C330 110 390 170 390 244 C390 320 330 365 256 438 C182 365 122 320 122 244 C122 170 182 110 256 110 Z" fill="#FFFFFF" stroke="#0B2545" stroke-width="9"/>
+  <rect x="170" y="150" width="36" height="150" fill="#0B4AA6"/>
+  <rect x="296" y="150" width="36" height="150" fill="#0B4AA6"/>
+  <rect x="170" y="208" width="162" height="30" fill="#0B4AA6"/>
+  <path d="M322 178 A86 86 0 1 0 322 322" fill="none" stroke="#F5C400" stroke-width="32" stroke-linecap="round"/>
+  <circle cx="256" cy="225" r="9" fill="none" stroke="#E53935" stroke-width="6"/>
+  <line x1="256" y1="198" x2="256" y2="252" stroke="#E53935" stroke-width="6" stroke-linecap="round"/>
+  <line x1="229" y1="225" x2="283" y2="225" stroke="#E53935" stroke-width="6" stroke-linecap="round"/>
+</svg>`;
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const img = new Image();
+const blob = new Blob([SVG], {type:'image/svg+xml'});
+const url = URL.createObjectURL(blob);
+img.onload = () => { ctx.clearRect(0,0,512,512); ctx.drawImage(img,0,0,512,512); };
+img.src = url;
+
+function download(name, size){
+  const tmp = document.createElement('canvas');
+  tmp.width = size; tmp.height = size;
+  tmp.getContext('2d').drawImage(img,0,0,size,size);
+  const a = document.createElement('a');
+  a.download = name;
+  a.href = tmp.toDataURL('image/png');
+  a.click();
+}
+document.getElementById('dl-apple').onclick = () => download('apple-touch-icon.png', 512);
+document.getElementById('dl-192').onclick   = () => download('icon-192.png', 192);
+document.getElementById('dl-512').onclick   = () => download('icon-512.png', 512);
+</script>
+</body>
+</html>

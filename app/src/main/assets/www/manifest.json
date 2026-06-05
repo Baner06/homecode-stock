@@ -1,0 +1,25 @@
+{
+  "name": "HomeCode Stock — Ubicación y escaneo de productos",
+  "short_name": "HomeCode Stock",
+  "description": "Convierte un código de barras en la ubicación física del producto en bodega.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0071DC",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "categories": [
+    "productivity",
+    "utilities"
+  ]
+}
