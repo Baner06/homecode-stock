@@ -20,17 +20,21 @@ create table if not exists public.products (
   barcode    text primary key,
   sku        text,                       -- ID interno único (independiente del código de barras)
   name       text,
+  pasillo    text,                       -- Pasillo (ej. "26a")
+  estante    text,                       -- Estante / código de estante (ej. "7648G-01")
   zone       integer not null default 1,
   col        integer not null default 1,
-  row_num    integer not null default 1,
+  row_num    integer not null default 1, -- Fila DENTRO del estante (no confundir con el nº de estante)
   position   integer not null default 1,
   created_at timestamptz not null default now(),
   updated_at timestamptz,
   updated_by text
 );
 
--- Migración: si la tabla ya existía sin la columna SKU, la agrega.
-alter table public.products add column if not exists sku text;
+-- Migración: si la tabla ya existía, agrega las columnas nuevas.
+alter table public.products add column if not exists sku     text;
+alter table public.products add column if not exists pasillo text;
+alter table public.products add column if not exists estante text;
 
 -- El SKU debe ser único (cuando está presente).
 create unique index if not exists products_sku_key

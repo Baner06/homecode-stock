@@ -58,7 +58,7 @@ const App = (() => {
 // REGISTRO DE UBICACIONES
 // ===================================
 const Registration = (() => {
-  let state = { zone: 1, column: 1, row: 1, position: 1 };
+  let state = { pasillo: '', estante: '', zone: 1, column: 1, row: 1, position: 1 };
   let _lastBarcode = null;
   let _toastTimer = null;
   let _duplicateTimer = null;
@@ -81,8 +81,11 @@ const Registration = (() => {
     }
     const z = parseInt(document.getElementById('setup-zone').value, 10) || 1;
     const c = parseInt(document.getElementById('setup-column').value, 10) || 1;
-    state = { zone: z, column: c, row: 1, position: 1 };
+    const pasillo = (document.getElementById('setup-pasillo')?.value || '').trim();
+    const estante = (document.getElementById('setup-estante')?.value || '').trim();
+    state = { pasillo, estante, zone: z, column: c, row: 1, position: 1 };
     updateHUD();
+    updateLocContext();
     const skuField = document.getElementById('register-sku');
     if (skuField) skuField.value = '';
     App.goTo('register-scan');
@@ -96,6 +99,16 @@ const Registration = (() => {
     document.getElementById('hud-column').textContent   = state.column;
     document.getElementById('hud-row').textContent      = state.row;
     document.getElementById('hud-position').textContent = state.position;
+  }
+
+  function updateLocContext() {
+    const el = document.getElementById('register-loc-context');
+    if (!el) return;
+    const parts = [];
+    if (state.pasillo) parts.push('Pasillo ' + state.pasillo);
+    if (state.estante) parts.push('Estante ' + state.estante);
+    el.textContent = parts.join('  ·  ');
+    el.style.display = parts.length ? 'block' : 'none';
   }
 
   async function handleScan(barcode) {
@@ -112,6 +125,7 @@ const Registration = (() => {
 
       const record = {
         barcode, sku, name: '',
+        pasillo: state.pasillo, estante: state.estante,
         zone: state.zone, column: state.column,
         row: state.row, position: state.position,
         createdAt: Date.now(),
@@ -141,6 +155,8 @@ const Registration = (() => {
     content.innerHTML = `
       ${record.name ? `<div class="loc-row"><span class="loc-key">Nombre</span><span class="loc-val" style="font-size:0.95rem">${esc(record.name)}</span></div>` : ''}
       <div class="loc-row"><span class="loc-key">Código</span><span class="loc-val" style="font-size:0.9rem">${esc(barcode)}</span></div>
+      ${record.pasillo ? `<div class="loc-row"><span class="loc-key">Pasillo</span><span class="loc-val">${esc(record.pasillo)}</span></div>` : ''}
+      ${record.estante ? `<div class="loc-row"><span class="loc-key">Estante</span><span class="loc-val">${esc(record.estante)}</span></div>` : ''}
       <div class="loc-row"><span class="loc-key">Zona</span><span class="loc-val">${record.zone}</span></div>
       <div class="loc-row"><span class="loc-key">Columna</span><span class="loc-val">${record.column}</span></div>
       <div class="loc-row"><span class="loc-key">Fila</span><span class="loc-val">${record.row}</span></div>
@@ -276,6 +292,12 @@ const Lookup = (() => {
       : '';
     const skuLine = record.sku
       ? `<div class="result-barcode">SKU: ${esc(record.sku)}</div>` : '';
+    const shelfLine = (record.pasillo || record.estante)
+      ? `<div class="result-shelf">
+           ${record.pasillo ? `<span><strong>Pasillo:</strong> ${esc(record.pasillo)}</span>` : ''}
+           ${record.estante ? `<span><strong>Estante:</strong> ${esc(record.estante)}</span>` : ''}
+         </div>`
+      : '';
 
     content.innerHTML = `
       <div class="result-found">
@@ -284,6 +306,7 @@ const Lookup = (() => {
           Ubicación correcta
         </div>
         ${record.name ? `<div class="result-name">${esc(record.name)}</div>` : ''}
+        ${shelfLine}
         <div class="result-grid">
           <div class="result-cell"><span class="result-cell-label">Zona</span><span class="result-cell-value">${record.zone}</span></div>
           <div class="result-cell"><span class="result-cell-label">Columna</span><span class="result-cell-value">${record.column}</span></div>
@@ -380,6 +403,8 @@ const Editor = (() => {
     document.getElementById('edit-barcode').textContent = r.barcode;
     document.getElementById('edit-sku').value      = r.sku || '';
     document.getElementById('edit-name').value     = r.name || '';
+    document.getElementById('edit-pasillo').value  = r.pasillo || '';
+    document.getElementById('edit-estante').value  = r.estante || '';
     document.getElementById('edit-zone').value      = r.zone;
     document.getElementById('edit-column').value    = r.column;
     document.getElementById('edit-row').value       = r.row;
@@ -395,6 +420,8 @@ const Editor = (() => {
       barcode:  r.barcode,
       sku:      document.getElementById('edit-sku').value.trim(),
       name:     document.getElementById('edit-name').value.trim(),
+      pasillo:  document.getElementById('edit-pasillo').value.trim(),
+      estante:  document.getElementById('edit-estante').value.trim(),
       zone:     parseInt(document.getElementById('edit-zone').value, 10) || 1,
       column:   parseInt(document.getElementById('edit-column').value, 10) || 1,
       row:      parseInt(document.getElementById('edit-row').value, 10) || 1,
@@ -439,6 +466,8 @@ const ProductForm = (() => {
     document.getElementById('pf-barcode').value  = p.barcode || '';
     document.getElementById('pf-sku').value      = p.sku || '';
     document.getElementById('pf-name').value     = '';
+    document.getElementById('pf-pasillo').value  = p.pasillo || '';
+    document.getElementById('pf-estante').value  = p.estante || '';
     document.getElementById('pf-zone').value     = 1;
     document.getElementById('pf-column').value   = 1;
     document.getElementById('pf-row').value      = 1;
@@ -462,6 +491,8 @@ const ProductForm = (() => {
       barcode,
       sku:      document.getElementById('pf-sku').value.trim(),
       name:     document.getElementById('pf-name').value.trim(),
+      pasillo:  document.getElementById('pf-pasillo').value.trim(),
+      estante:  document.getElementById('pf-estante').value.trim(),
       zone:     parseInt(document.getElementById('pf-zone').value, 10) || 1,
       column:   parseInt(document.getElementById('pf-column').value, 10) || 1,
       row:      parseInt(document.getElementById('pf-row').value, 10) || 1,
@@ -484,6 +515,86 @@ const ProductForm = (() => {
   function _err(el, text) { if (el) { el.style.color = 'var(--red)'; el.textContent = text; } }
 
   return { openNew, save, cancel };
+})();
+
+
+// ===================================
+// GESTIÓN DE PRODUCTOS (solo admin: ver, editar y borrar todo)
+// ===================================
+const Products = (() => {
+  let _all = [];
+
+  async function open() {
+    if (!Auth.isAdmin()) {
+      AdminUI.openLogin('Inicia sesión como administrador para gestionar productos.');
+      return;
+    }
+    const listEl  = document.getElementById('products-list');
+    const countEl = document.getElementById('products-count');
+    const filterEl = document.getElementById('products-filter');
+    if (filterEl) filterEl.value = '';
+    if (listEl) listEl.innerHTML = '<div class="products-empty">Cargando productos...</div>';
+    if (countEl) countEl.textContent = '';
+    App.goTo('products');
+    try {
+      _all = await DB.getAll();
+      _all.sort((a, b) => (a.name || '').localeCompare(b.name || '') || (a.barcode || '').localeCompare(b.barcode || ''));
+      _render(_all);
+    } catch (err) {
+      if (listEl) listEl.innerHTML = `<div class="products-empty">Error: ${esc(err.message)}</div>`;
+    }
+  }
+
+  function filter() {
+    const q = (document.getElementById('products-filter')?.value || '').trim().toLowerCase();
+    if (!q) { _render(_all); return; }
+    const filtered = _all.filter(r =>
+      (r.name || '').toLowerCase().includes(q) ||
+      (r.barcode || '').toLowerCase().includes(q) ||
+      (r.sku || '').toLowerCase().includes(q) ||
+      (r.pasillo || '').toLowerCase().includes(q) ||
+      (r.estante || '').toLowerCase().includes(q)
+    );
+    _render(filtered);
+  }
+
+  function _render(list) {
+    const listEl  = document.getElementById('products-list');
+    const countEl = document.getElementById('products-count');
+    if (countEl) countEl.textContent = `${list.length} producto${list.length !== 1 ? 's' : ''}`;
+    if (!listEl) return;
+    if (!list.length) {
+      listEl.innerHTML = '<div class="products-empty">No hay productos.</div>';
+      return;
+    }
+    listEl.innerHTML = list.map(r => {
+      const loc = [];
+      if (r.pasillo) loc.push('Pasillo ' + esc(r.pasillo));
+      if (r.estante) loc.push('Estante ' + esc(r.estante));
+      loc.push(`Z${r.zone}·C${r.column}·F${r.row}·P${r.position}`);
+      const sub = [];
+      sub.push('Código: ' + esc(r.barcode));
+      if (r.sku) sub.push('SKU: ' + esc(r.sku));
+      return `
+        <button class="product-item" onclick="Products.openItem('${esc(r.barcode).replace(/'/g, "\\'")}')">
+          <div class="product-item-main">
+            <span class="product-item-name">${esc(r.name || '(sin nombre)')}</span>
+            <span class="product-item-sub">${sub.join('  ·  ')}</span>
+            <span class="product-item-loc">${loc.join('  ·  ')}</span>
+          </div>
+          <svg class="product-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>`;
+    }).join('');
+  }
+
+  // Abre un producto en la vista de resultado (con editar/eliminar disponibles para admin).
+  function openItem(barcode) {
+    const record = _all.find(r => r.barcode === barcode);
+    if (!record) return;
+    Lookup.displayRecord(record);
+  }
+
+  return { open, filter, openItem };
 })();
 
 
@@ -798,6 +909,10 @@ const Settings = (() => {
     const backupCard = document.getElementById('card-backup');
     if (backupCard) backupCard.style.display = Auth.canBackup() ? 'flex' : 'none';
 
+    // La gestión de productos (ver/editar/borrar todo) es SOLO para administrador
+    const productsCard = document.getElementById('card-products');
+    if (productsCard) productsCard.style.display = Auth.isAdmin() ? 'flex' : 'none';
+
     // El botón "Borrar todo" solo lo ve el admin
     const clearAllBtn = document.getElementById('btn-clear-all');
     if (clearAllBtn) {
@@ -1064,6 +1179,8 @@ window.onAndroidBackKey = function() {
     if (typeof ProductForm !== 'undefined') ProductForm.cancel();
   } else if (current === 'edit') {
     if (typeof Editor !== 'undefined') Editor.cancel();
+  } else if (current === 'products') {
+    App.goTo('settings');
   } else if (current === 'settings') {
     App.goTo('home');
   } else {

@@ -101,7 +101,17 @@
       <h2>Registrar ubicaciones</h2>
     </div>
     <div class="screen-body">
-      <p class="section-label">Define el punto de inicio</p>
+      <p class="section-label">Ubicación (se mantiene durante el registro)</p>
+      <div class="form-field">
+        <label>Pasillo (ej. 26a)</label>
+        <input type="text" id="setup-pasillo" class="input-text" autocomplete="off" placeholder="26a" />
+      </div>
+      <div class="form-field">
+        <label>Estante (ej. 7648G-01)</label>
+        <input type="text" id="setup-estante" class="input-text" autocomplete="off" placeholder="7648G-01" />
+      </div>
+
+      <p class="section-label">Punto de inicio</p>
       <div class="input-grid">
         <div class="input-group">
           <label>Zona</label>
@@ -114,7 +124,7 @@
       </div>
       <div class="info-box">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        La Fila y Posición iniciarán en 1 automáticamente.
+        La Fila (dentro del estante) y la Posición iniciarán en 1 automáticamente.
       </div>
       <button class="btn-primary" onclick="Registration.start()">
         Iniciar registro
@@ -130,6 +140,8 @@
       </button>
       <h2>Modo registro</h2>
     </div>
+
+    <div id="register-loc-context" class="loc-context"></div>
 
     <!-- Location HUD -->
     <div id="location-hud" class="location-hud">
@@ -289,10 +301,18 @@
       </div>
 
       <p class="section-label">Ubicación física</p>
+      <div class="form-field">
+        <label>Pasillo (ej. 26a)</label>
+        <input type="text" id="edit-pasillo" class="input-text" autocomplete="off" placeholder="26a" />
+      </div>
+      <div class="form-field">
+        <label>Estante (ej. 7648G-01)</label>
+        <input type="text" id="edit-estante" class="input-text" autocomplete="off" placeholder="7648G-01" />
+      </div>
       <div class="input-grid">
         <div class="input-group"><label>Zona</label><input type="number" id="edit-zone" min="1" inputmode="numeric" /></div>
         <div class="input-group"><label>Columna</label><input type="number" id="edit-column" min="1" inputmode="numeric" /></div>
-        <div class="input-group"><label>Fila</label><input type="number" id="edit-row" min="1" inputmode="numeric" /></div>
+        <div class="input-group"><label>Fila (en estante)</label><input type="number" id="edit-row" min="1" inputmode="numeric" /></div>
         <div class="input-group"><label>Posición</label><input type="number" id="edit-position" min="1" inputmode="numeric" /></div>
       </div>
 
@@ -331,10 +351,18 @@
       </div>
 
       <p class="section-label">Ubicación física</p>
+      <div class="form-field">
+        <label>Pasillo (ej. 26a)</label>
+        <input type="text" id="pf-pasillo" class="input-text" autocomplete="off" placeholder="26a" />
+      </div>
+      <div class="form-field">
+        <label>Estante (ej. 7648G-01)</label>
+        <input type="text" id="pf-estante" class="input-text" autocomplete="off" placeholder="7648G-01" />
+      </div>
       <div class="input-grid">
         <div class="input-group"><label>Zona</label><input type="number" id="pf-zone" min="1" value="1" inputmode="numeric" /></div>
         <div class="input-group"><label>Columna</label><input type="number" id="pf-column" min="1" value="1" inputmode="numeric" /></div>
-        <div class="input-group"><label>Fila</label><input type="number" id="pf-row" min="1" value="1" inputmode="numeric" /></div>
+        <div class="input-group"><label>Fila (en estante)</label><input type="number" id="pf-row" min="1" value="1" inputmode="numeric" /></div>
         <div class="input-group"><label>Posición</label><input type="number" id="pf-position" min="1" value="1" inputmode="numeric" /></div>
       </div>
 
@@ -380,6 +408,15 @@
         <div id="admin-box" class="admin-box"></div>
       </div>
 
+      <!-- SECCIÓN: GESTIÓN DE PRODUCTOS (solo administrador) -->
+      <div class="settings-card" id="card-products" style="display:none;">
+        <p class="section-label">Gestión de Productos</p>
+        <button class="btn-setting" onclick="Products.open()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+          Ver productos registrados
+        </button>
+      </div>
+
       <!-- SECCIÓN: RESPALDO (solo administrador) -->
       <div class="settings-card" id="card-backup">
         <p class="section-label">Respaldo de Datos</p>
@@ -403,6 +440,23 @@
       </div>
 
       <div id="settings-msg" class="settings-msg"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: PRODUCTS (admin) -->
+  <div id="screen-products" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="App.goTo('settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      </button>
+      <h2>Productos registrados</h2>
+    </div>
+    <div class="screen-body">
+      <div class="form-field">
+        <input type="text" id="products-filter" class="input-text" autocomplete="off" placeholder="Filtrar por nombre, código o SKU" oninput="Products.filter()" />
+      </div>
+      <div id="products-count" class="products-count"></div>
+      <div id="products-list" class="products-list"></div>
     </div>
   </div>
 

@@ -1569,3 +1569,96 @@ body.dark-theme .modal-overlay {
   width: 20px;
   border-radius: 5px;
 }
+
+/* ===== Contexto de ubicación en modo registro ===== */
+.loc-context {
+  display: none;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-glow, rgba(0,113,220,0.1));
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin: 8px 16px 0;
+}
+
+/* ===== Estante en el resultado de búsqueda ===== */
+.result-shelf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  justify-content: center;
+  font-size: 0.95rem;
+  color: var(--text);
+  margin: 4px 0 10px;
+}
+
+/* ===== Lista de gestión de productos (admin) ===== */
+.products-count {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin: 4px 0 10px;
+  font-weight: 600;
+}
+.products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.products-empty {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 30px 10px;
+  font-size: 0.95rem;
+}
+.product-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: var(--card, #fff);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 14px;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.15s;
+}
+.product-item:active { transform: scale(0.99); }
+.product-item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+.product-item-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.product-item-sub {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.product-item-loc {
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.product-item-chevron {
+  width: 20px;
+  height: 20px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
