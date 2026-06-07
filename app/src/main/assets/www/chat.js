@@ -7,7 +7,9 @@ const SupportChat = (() => {
   let _sending = false;
 
   function isEnabled() {
-    return CONFIG.CHAT_API_URL && CONFIG.CHAT_API_URL.startsWith('http');
+    return typeof CONFIG !== 'undefined'
+      && CONFIG.CHAT_API_URL
+      && CONFIG.CHAT_API_URL.startsWith('http');
   }
 
   function open() {
@@ -114,7 +116,7 @@ const SupportChat = (() => {
 
   function init() {
     const fab = document.getElementById('chat-fab');
-    if (fab && isEnabled()) fab.style.display = 'flex';
+    if (fab) fab.style.display = 'flex';
   }
 
   return { init, open, close, toggle, send, onKey, isEnabled };

@@ -3,7 +3,7 @@
  * Caches all app assets for full offline support
  */
 
-const CACHE_NAME = 'homecode-v9';
+const CACHE_NAME = 'homecode-v10';
 
 const ASSETS_TO_CACHE = [
   './',

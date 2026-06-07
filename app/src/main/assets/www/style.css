@@ -1675,10 +1675,10 @@ body.dark-theme .modal-overlay {
   background: var(--accent);
   color: #fff;
   box-shadow: 0 4px 18px rgba(0, 87, 217, 0.35);
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 900;
+  z-index: 9999;
   cursor: pointer;
 }
 .chat-fab svg { width: 26px; height: 26px; }
@@ -1696,7 +1696,7 @@ body.dark-theme .modal-overlay {
   box-shadow: 0 8px 32px rgba(0,0,0,0.18);
   display: none;
   flex-direction: column;
-  z-index: 901;
+  z-index: 10000;
   overflow: hidden;
 }
 .chat-panel.open { display: flex; }
